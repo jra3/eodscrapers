@@ -1,0 +1,9 @@
+Each of these scripts fetches the full history of a given stock and prints it
+out in CSV format. The columns are Date, Open, and Close.  The Date field is
+formatted as YYYY-MM-DD.
+
+Usage:
+./fooscraper.py GOOG
+
+Note that the reason I wrote many of these scrapers is that datasources have
+disagreements that can be solved democratically.
