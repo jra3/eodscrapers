@@ -1,7 +1,7 @@
 import time
 import datetime
 
-order = ['Date', 'Open', 'Close', ]
+order = ['Date', 'Close', ]
 
 def endtime():
     return datetime.datetime.now()# - datetime.timedelta(1)
@@ -13,7 +13,7 @@ def formatdate(datestr, informat):
     return time.strftime("%Y-%m-%d", t)
 
 def printdata(rows):
-    csvrows = [','.join([row[k] for k in order]) for row in rows]
+    csvrows = [','.join([str(row[k]) for k in order]) for row in rows]
     csvrows = list(set(csvrows)) # wtf duplicate rows
     csvrows.sort(reverse=True)
     print ','.join(order)
