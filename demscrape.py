@@ -56,19 +56,43 @@ for dsname, ds in datasources:
     for line in ds:
         unified[line['Date']][dsname]['Close'] = line['Close']
 
+yahoo_days = set()
 best_guess = []
 for date in sorted(unified, reverse=True):
     day = unified[date]
+    y = day['yahoo'].get('Close', None)
+    if y:
+        yahoo_days.add(date)
+
     winner = majority(
         day['google'].get('Close', None),
-        day['yahoo'].get('Close', None),
+        y,
         day['financialcontent'].get('Close', None))
 
+
     if winner:
+        # Where off by a penny, trust yahoo
+        if y and approxeq(winner, y):
+            winner = y
         best = {}
         best['Date'] = date
         best['Close'] = winner
         best_guess.append(best)
+
+# Google and financial content conspire to inject BS data on some days when
+# the markey was closed.  Yahoo seems to not have this problem
+possible_holidays = []
+for i in range(len(best_guess) - 1):
+    diff = best_guess[i]['Close'] - best_guess[i + 1]['Close']
+    if diff == 0.0:
+        possible_holidays.append(best_guess[i]['Date'])
+
+verified_holidays = set()
+for d in possible_holidays:
+    if d not in yahoo_days:
+        verified_holidays.add(d)
+
+best_guess = [d for d in best_guess if d['Date'] not in verified_holidays]
 
 for dsname, ds in datasources:
     accuracy(dsname, ds, best_guess)
