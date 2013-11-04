@@ -34,9 +34,7 @@ def gethistory(symbol):
 
             newline['Open'] = round(newline['Open'], 2)
             newline['Close'] = round(newline['Close'], 2)
-
-
-        fulllist.append(newline)
+            fulllist.append(newline)
 
     return fulllist
 
