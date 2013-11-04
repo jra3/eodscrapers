@@ -23,16 +23,18 @@ def gethistory(symbol):
 
         alldupe = True # google returns default results if we go out of range, halt on seeing default data
         for line in csv.DictReader(urllib2.urlopen(url)):
-            date = line[datekey]
-            del line[datekey]
-            if date not in dates:
-                alldupe = False
-                dates.add(date)
-                line['Date'] = formatdate(date, '%d-%b-%y')
-                line['Open'] = round(float(line['Open']), 2)
-                line['Close'] = round(float(line['Close']), 2)
-                fulllist.append(line)
-
+            try:
+                date = line[datekey]
+                del line[datekey]
+                if date not in dates:
+                    alldupe = False
+                    dates.add(date)
+                    line['Date'] = formatdate(date, '%d-%b-%y')
+                    line['Open'] = round(float(line['Open']), 2)
+                    line['Close'] = round(float(line['Close']), 2)
+                    fulllist.append(line)
+            except:
+                pass
         if alldupe:
             break
         (start, end) = (start - datetime.timedelta(_atonce), start)
